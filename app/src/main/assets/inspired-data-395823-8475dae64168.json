@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "inspired-data-395823",
+  "private_key_id": "8475dae64168c20de9292a423871e4e3d6b4c480",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDOMVbukrQsQ6oM\nEAtEzmrLy+ZQt4NF6qjKRRx/qOT17bDiBfz3yh/WgZALsRCpSeWJyP0SLhdWaAhm\nUjqlZ4/YobTx//KZ7sQodD1PRceLmFPrC1PVOrPyb3Cto9f4Ja7h6c7SxA5OY67U\nW1GcdX30E/HE/vn2SM8OkfhtxDk+um/y9mvoibdJde/aLyAKHoh9T63L4VB9PaaN\nHxtJYUNgcOvMAdF1OBXQjw8hh8kqvNbt+t53tJtu6iwNZex92qVaFLOWcE6IGfAI\ng/KNWvMGC9AmqnTl44vRB6f619pr7KZnxMkdxf8S/9F9d9QAdoV1LaLkK9JR9udI\n4/BeCqclAgMBAAECggEAEQuboePPULR0R4SBBfphckEEJGqTR9GfC/+cHEKQUPNK\nEtlHYQ2cxa0WxRypYbFJ8DLFFv5n7/zwKtND5V4TEmfFz1anDcoi/awkUFwWo6ff\nUhgw4Tj13MYRJM2dYjZtR2A+eIZ8H0dW0dfNvpco5ydJ7ozciZtZwJzZEmvtBo4Z\ni61vu5SYDM2Gzo454zRelpORbzj0fceXstXX9Zi8n1O6y99WuGAz5tlzAsW4e2bl\ntG1BOUi46HsnbRj4SaISFnDFXs93AXqMP42MYYK6YV5xgPyHVxpi+u88jiGHhvTs\nAP6ThfzH6mMqTWQd+1POTwiFzesqmC0AHYZ9dJd9qQKBgQDn9td+ks/FT2ykTsZ0\nyk2DEakdtL+UMTPveTW9wgoN6ytx4vM47EM3romFAC93IZ59+WzUwriUqsrWpM6M\ngDBJrH2YqzeX8YmewJzE1wHECFQu/5LnH011M/BP68iK9mOjznlqySGVp9pMQlH2\nxmPYTKQd/GTcwkHls0qAz2/QKQKBgQDjjt/0w7Ozp/SwIOm0jKXm0MZHwd7gI3HG\n7yvMtzWmRPmVYfT4EY3bWrgouK64fviQfBx13XtossEbBEewkw9ELnQQmisZ/E6I\nKM8YTeeADCY6oXw1faRXvEd1esFQNz9eoE67/jo3oWlpqCN+6g/Dk0OU+U8gl4LP\niw6iOB/OnQKBgEh6IvjkbFDNMTfheTayoydp1Dp46EcoXH7dk4IX58ZTjX6HF9HY\nWGREf6lz1mDVu0zHK08LDFs/RiNs2TCjOPM8Fv4luTgbexGEQzdpqp6Sr6MDreXT\nLQOK1/JQzJdGxvk+oUdRUtIM4TNkoXGGqVnDEKBh5S3o8GgR7hxzNA+JAoGAAWKq\nTGQwoORh4fyhT58Xl3sn6eHtSHIOzEZCfwGSiwuadWVeR3Bb67z2qBDPx4HGY6LN\nzY3mpXGJKW/yO8n5atHZlQxLPOJDXCLbd+tpgGcSiILZLb4xFPOpf7aanLFpalsR\nf6WBlzsdWC5U4P3t0KQB4lNOPwWNH1RaZ3RuBSUCgYEA5OhRLoXNv6IiatJzLa92\nAO3aSq6OA8SLgbAvx2aAxhbaT4cyfMRQ968TLc1uwMDNgj4BolHavQsI7T2HhxQ8\ni3l2WOU2rbCS3MrfSneYp92HmMloSxiIrQljROtRt7Bk6B8e2pd7Tiv24usbv8r7\nKYgQh4r45EUNAkH5nUDnlsM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "burak-309@inspired-data-395823.iam.gserviceaccount.com",
+  "client_id": "115060883947039537361",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/burak-309%40inspired-data-395823.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

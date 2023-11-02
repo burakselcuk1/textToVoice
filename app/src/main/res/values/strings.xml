@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">textToVoice</string>
+    <string name="google_cloud_api_key">AIzaSyDT9UIPlr6l0vTljs6DhVKxDOMI6Xtws1g</string>
+
+</resources>

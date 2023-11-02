@@ -3,6 +3,7 @@ package com.example.texttovoice
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -33,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         var voiceValue = binding.editText.text.toString()
+
+        binding.download.setOnClickListener {
+            downloadLastFile()
+        }
 
         //DİL AYARI
         val languages = arrayOf("Türkçe", "İngilizce") // Daha fazla dil ekleyebilirsiniz
@@ -96,12 +101,13 @@ class MainActivity : AppCompatActivity() {
 
         if (file.exists()) {
             try {
-                val filePath = file.absolutePath
                 val fis = FileInputStream(file)
                 val fd = fis.fd
                 mediaPlayer.setDataSource(fd)
                 mediaPlayer.prepare()
                 mediaPlayer.start()
+                val lastFileName = getLastSavedFileName()
+                binding.text1.text = "Son Kayıt: $lastFileName"
             } catch (e: Exception) {
                 // Eğer bir şeyler yanlış giderse, bu blok çalışır.
                 Toast.makeText(this, "Ses dosyası oynatılamıyor!", Toast.LENGTH_SHORT).show()
@@ -193,5 +199,54 @@ class MainActivity : AppCompatActivity() {
             "output.mp3"
         }
     }
+
+    private fun getLastSavedFileName(): String {
+        // Dosyaların kaydedildiği dizini belirtin
+        val directory = filesDir
+
+        // Dizin içindeki tüm dosyaları listele
+        val files = directory.list()
+
+        // Dosya isimlerini tarihe göre sırala (en yeniden en eskiye)
+        files.sortByDescending {
+            File(directory, it).lastModified()
+        }
+
+        // Eğer dosya varsa, en yeni dosyanın adını döndür
+        if (files.isNotEmpty()) {
+            return files[0]
+        } else {
+            // Hiç dosya yoksa varsayılan bir değer döndür
+            return "Dosya Bulunamadı"
+        }
+    }
+
+    fun downloadLastFile() {
+        val lastFileName = getLastSavedFileName()
+        val sourceFile = File(filesDir, lastFileName)
+        val destinationFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), lastFileName)
+
+        if (sourceFile.exists()) {
+            try {
+                val source = FileInputStream(sourceFile).channel
+                val destination = FileOutputStream(destinationFile).channel
+                destination.transferFrom(source, 0, source.size())
+                source.close()
+                destination.close()
+
+                // Dosyanın başarıyla indirildiğini kullanıcıya bildirin
+                Toast.makeText(this, "Dosya indirildi: $lastFileName", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                // İndirme sırasında bir hata oluşursa kullanıcıya bildirin
+                Toast.makeText(this, "Dosya indirilemedi!", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        } else {
+            // Dosya mevcut değilse uygun bir hata mesajı gösterebilirsiniz.
+            Toast.makeText(this, "Ses dosyası bulunamadı!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
 }

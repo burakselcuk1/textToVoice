@@ -10,23 +10,29 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.texttovoice.databinding.ActivityMainBinding
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.texttospeech.v1beta1.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.OutputStream
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     private val outputFile = "output.mp3"
     private var languageCode: String = "tr-TR" // Varsayılan olarak Türkçe
     private var ssmlGender: SsmlVoiceGender = SsmlVoiceGender.FEMALE // Varsayılan olarak kadın
-
+    private lateinit var binding: ActivityMainBinding
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        var voiceValue = binding.editText.text.toString()
 
         //DİL AYARI
         val languages = arrayOf("Türkçe", "İngilizce") // Daha fazla dil ekleyebilirsiniz
@@ -41,11 +47,11 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedLanguage = languages[position]
                 setLanguage(selectedLanguage)
-                synthesizeSpeech() // Seçilen dile göre sesi oluştur
+                synthesizeSpeech(voiceValue,voiceValue) // Seçilen dile göre sesi oluştur
             }
         }
 
-        synthesizeSpeech() // İlk yükleme için ses oluştur
+//        synthesizeSpeech() // İlk yükleme için ses oluştur
 
 
         //CİNSİYET AYARI
@@ -64,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedGender = genderOptions[position]
                 setGender(selectedGender)
-                synthesizeSpeech() // Seçilen cinsiyete göre sesi oluştur
+                synthesizeSpeech(voiceValue,voiceValue) // Seçilen cinsiyete göre sesi oluştur
             }
         }
 
@@ -73,7 +79,20 @@ class MainActivity : AppCompatActivity() {
 
     fun playSound(view: View) {
         val mediaPlayer = MediaPlayer()
-        val file = File(filesDir, getOutputFileName()) // Bu satırı güncelledik
+
+        // Ses dosyasını oluştur
+        val textFromEditText = binding.editText.text.toString().trim()
+        val fileName = getOutputFileName()
+
+        if (textFromEditText.isNotEmpty()) {
+            // Ses dosyasını oluştur
+            synthesizeSpeech(textFromEditText, fileName)
+        } else {
+            // Metin boşsa uygun bir hata mesajı göster
+            Toast.makeText(this, "Metin boş! Ses dosyası oluşturulamıyor.", Toast.LENGTH_SHORT).show()
+        }
+
+        val file = File(filesDir, fileName)
 
         if (file.exists()) {
             try {
@@ -94,26 +113,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-    fun setLanguage(language: String) {
-        languageCode = when (language) {
-            "Türkçe" -> "tr-TR"
-            "İngilizce" -> "en-US"
-            else -> "en-US"
-        }
-    }
-
-    fun synthesizeSpeech() {
+    fun synthesizeSpeech(text: String, fileName: String) {
         val credentials = GoogleCredentials.fromStream(assets.open("inspired-data-395823-8475dae64168.json"))
         val textToSpeechSettings = TextToSpeechSettings.newBuilder()
             .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
             .build()
 
         val client = TextToSpeechClient.create(textToSpeechSettings)
-        val text = "This is a test record"
 
-        val input = SynthesisInput.newBuilder().setText(text.toString()).build()
+        val input = SynthesisInput.newBuilder().setText(text).build()
 
         val voicesResponse = client.listVoices("")
         val availableVoices = voicesResponse.voicesList.filter { it.languageCodesList.contains(languageCode) }
@@ -127,24 +135,44 @@ class MainActivity : AppCompatActivity() {
             .setSsmlGender(ssmlGender)
             .build()
 
-
         val audioConfig = AudioConfig.newBuilder()
             .setAudioEncoding(AudioEncoding.MP3)
             .build()
 
-        voicesResponse.voicesList.forEach { voice ->
-            println("Name: ${voice.name}, Language: ${voice.languageCodesList}, Gender: ${voice.ssmlGender}")
-        }
-
         val response = client.synthesizeSpeech(input, voice, audioConfig)
         val audioContents = response.audioContent
 
-        val file = File(filesDir, outputFile)
-        val out: OutputStream = FileOutputStream(file)
-        out.write(audioContents.toByteArray())
-        out.close()
+        val file = File(filesDir, fileName)
+
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    val out: OutputStream = FileOutputStream(file)
+                    out.write(audioContents.toByteArray())
+                    out.close()
+                } else {
+                    // Dosya oluşturulamadıysa uygun bir hata mesajı göster
+                    Toast.makeText(this, "Ses dosyası oluşturulamadı!", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: IOException) {
+                // Dosya oluştururken veya yazarken hata oluşursa uygun bir hata mesajı göster
+                Toast.makeText(this, "Ses dosyası oluşturulamadı!", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        }
+
 
         client.close()
+    }
+
+
+
+    fun setLanguage(language: String) {
+        languageCode = when (language) {
+            "Türkçe" -> "tr-TR"
+            "İngilizce" -> "en-US"
+            else -> "en-US"
+        }
     }
 
     fun setGender(gender: String) {
@@ -158,7 +186,12 @@ class MainActivity : AppCompatActivity() {
     private fun getOutputFileName(): String {
         val editText: EditText = findViewById(R.id.editText)
         val textFromEditText = editText.text.toString().trim()
-        return if (textFromEditText.isNotEmpty()) textFromEditText + ".mp3" else "output.mp3"
+        val date = Date().time
+        return if (textFromEditText.isNotEmpty()) {
+            "$textFromEditText-$date.mp3"
+        } else {
+            "output.mp3"
+        }
     }
 
 }
